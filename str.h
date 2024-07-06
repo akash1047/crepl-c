@@ -29,101 +29,62 @@ typedef struct {
     int cap;
 } str_t;
 
-/**
- * Checks if the string is empty.
- *
- * @param s The pointer to string.
- *
- * @return 1 if the string is empty, otherwise 0
- * (for null string return value is 0).
- *
- * @exception STR_ERR_NULL if the string is NULL.
- */
-int str_is_empty(const str_t *s);
+// Return's 1 if string length is 0 otherwise 1
+// @note If string is NULL return's 0
+int str_is_empty(const str_t *string);
 
-/**
- * Concatenates two strings together and create's a new string.
- *
- * @param a The first string.
- * @param b The second string.
- *
- * @return The new string.
- * @exception STR_ERR_ALLOC if memory allocation fails while creating new
- * string.
- * @exception STR_ERR_NULL if any of the strings are NULL.
- */
-str_t str_join(const str_t *a, const str_t *b);
+// Create an empty string with some capacity.
+//
+// @param capacity The ammount of bytes string can hold.
+//
+// @exception Return's NULL if memory allocation fails
+str_t *str_with_capacity(size_t capacity);
 
-/**
- * Creates a empty string with the given capacity.
- *
- * @param cap The capacity of the string.
- *
- * @return The new string.
- *
- * @note If capacity is negative, the function will create string of length 0.
- *
- * @exception STR_ERR_ALLOC if memory allocation fails while creating new
- * @exception STR_ERR_NEG_CAP if the capacity is negative.
- */
-str_t str_with_capacity(int cap);
+// Create an empty string with default capacity.
+inline str_t *str_new() { return str_with_capacity(STR_DEFAULT_CAP); }
 
-/**
- * Creates a new empty string with default capacity.
- *
- * @return The new string.
- *
- * @exception STR_ERR_ALLOC if memory allocation fails while creating new string
- */
-inline str_t str_new() { return str_with_capacity(STR_DEFAULT_CAP); }
+// Create new string from c style string(null-byte-terminated-string)
+str_t *str_from_cstr(const char *cstring);
 
-/**
- * Creates a new string from a C string.
- *
- * @param cstr The C string (null-byte-terminated).
- *
- * @return The new string.
- *
- * @exception STR_ERR_ALLOC if memory allocation fails while creating new string
- * @exception STR_ERR_NULL if the C string is NULL.
- */
-str_t str_from_cstr(const char *cstr);
+// Create new string from c style string by taking exactly n bytes from the
+// start.
+// @note If cstring length is less then n bytes, the function creates string to
+// fit the amount of bytes available to copy, i.e- string of same length as
+// cstring.
+str_t *str_from_cstr_n(const char *cstring, size_t n);
 
-/**
- * Pushes a character to the end of the string.
- *
- * @param s The pointer to the string.
- * @param c The character to be pushed/added/appended.
- *
- * @exception STR_ERR_NULL if the string is NULL.
- */
-void str_push_end_char(str_t *s, char c);
+// Pushes a character at the end of the string.
+// @note reallocates if the capacity excededs.
+void str_push_char_end(str_t *string, char ch);
 
-/**
- * Pushes a string to the end of the string.
- *
- * @param s The pointer to the string.
- * @param str The string to be pushed/added/appended.
- *
- * @exception STR_ERR_NULL if any of the parameters are NULL.
- */
-void str_push_end_str(str_t *s, const str_t *str);
+// Put's a character at an index.
+// @note reallocates if the capacity excededs.
+void str_push_char_at(str_t *string, size_t at, char ch);
 
-/**
- * Pushes a C string to the end of the string.
- *
- * @param s The pointer to the string.
- * @param cstr The C string to be pushed/added/appended.
- *
- * @exception STR_ERR_NULL if any of the parameter is NULL.
- */
-void str_push_end_cstr(str_t *s, const char *cstr);
+// Append string to the end of a string
+// @note reallocates if the capacity excededs
+void str_push_str_end(str_t *string, const str_t *string_to_append);
+
+// Fit in a string at a certain index.
+// @note reallocates if the capacity excededs.
+void str_push_str_at(str_t *string, size_t at, const str_t *string_to_append);
+
+// Append c style string to the end of a string
+// @note reallocates if the capacity excededs
+void str_push_cstr_end(str_t *string, const char *cstring_to_append);
+
+// Fit in a c style string at a certain index.
+// @note reallocates if the capacity excededs.
+void str_push_cstr_at(str_t *string, size_t at, const str_t *cstring_to_append);
 
 // It is what you think it is.
 int str_scanf(const str_t *s, const char *fmt, ...);
 
 // It is what you think it is.
 int str_printf(str_t *s, const char *fmt, ...);
+
+// Create's new string by joining two string together.
+str_t *str_concat(const str_t *first_string, const str_t *second_string);
 
 /**
  * The popping functions
