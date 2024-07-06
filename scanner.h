@@ -6,9 +6,11 @@
  *
  */
 
+#include "str.h"
 #include <stdbool.h>
 
 typedef struct {
+    str_t *source;
 
 } scanner_t;
 
